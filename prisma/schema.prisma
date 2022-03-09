@@ -1,0 +1,77 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id       String @id @default(uuid())
+  name     String
+  email    String @unique
+  password String
+  role     Roles
+
+  teachers Teacher[]
+  students Student[]
+}
+
+model Teacher {
+  id       String    @id @default(uuid())
+  userId   String    @unique
+  user     User      @relation(fields: [userId], references: [id])
+  subjects Subject[]
+  classes  Class[]
+  exams    Exam[]
+}
+
+model Student {
+  id      String  @id @default(uuid())
+  userId  String  @unique
+  user    User    @relation(fields: [userId], references: [id])
+  classes Class[]
+  grades  Grade[]
+}
+
+model Class {
+  id       String    @id @default(uuid())
+  name     String    @unique
+  students Student[]
+  subjects Subject[]
+  teachers Teacher[]
+}
+
+model Subject {
+  id       String    @id @default(uuid())
+  name     String    @unique
+  exams    Exam[]
+  classes  Class[]
+  teachers Teacher[]
+}
+
+model Exam {
+  id        String  @id @default(uuid())
+  name      String  @unique
+  subjectId String
+  teacherId String
+  subject   Subject @relation(fields: [subjectId], references: [id])
+  teacher   Teacher @relation(fields: [teacherId], references: [id])
+  grades    Grade[]
+}
+
+model Grade {
+  id        String  @id @default(uuid())
+  grade     Float
+  examId    String
+  studentId String
+  exam      Exam    @relation(fields: [examId], references: [id])
+  student   Student @relation(fields: [studentId], references: [id])
+}
+
+enum Roles {
+  ADMIN
+  TEACHER
+  STUDENT
+}
