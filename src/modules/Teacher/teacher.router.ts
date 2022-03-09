@@ -6,6 +6,11 @@ import { makeTeacherController } from "./factory/makeController";
 export default async function TeacherRouter(app: Application, router: Router) {
   const controller = makeTeacherController();
   const adaptRoute = createRouteAdapter(controller);
+  router.get(
+    "/:id/subjects",
+    access("read-subject", "read-teacher"),
+    adaptRoute(controller.findTeacherSubjects)
+  );
 
   router.get("/", access("read-teacher"), adaptRoute(controller.findAll));
   router.get("/:id", access("read-teacher"), adaptRoute(controller.findById));

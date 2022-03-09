@@ -17,6 +17,11 @@ export default async function ClassRouter(app: Application, router: Router) {
     access("update-class"),
     adaptRoute(controller.addTeacher)
   );
+  router.put(
+    "/:classId/add-student/:studentId",
+    access("update-class"),
+    adaptRoute(controller.addStudent)
+  );
 
   router.get("/", access("read-class"), adaptRoute(controller.findAll));
   router.get("/:id", access("read-class"), adaptRoute(controller.findById));

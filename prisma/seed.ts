@@ -33,6 +33,21 @@ async function main() {
   }
 
   /**
+   * CLASSES
+   */
+  const classesData = ["4A", "5A"];
+
+  for (const className of classesData) {
+    const classEntity = await db.class.upsert({
+      where: { name: className },
+      update: {},
+      create: { name: className },
+    });
+
+    classesRepository.set(classEntity.name, classEntity);
+  }
+
+  /**
    * TEACHERS
    */
   const teachersData = [
@@ -64,14 +79,54 @@ async function main() {
    * STUDENTS
    */
   const studentsData = [
-    { name: "Miguel", email: "2022001@dinamica.com", password: "2022001" },
-    { name: "Heitor", email: "2022002@dinamica.com", password: "2022002" },
-    { name: "Helena", email: "2022003@dinamica.com", password: "2022003" },
-    { name: "Theo", email: "2022004@dinamica.com", password: "2022004" },
-    { name: "Laura", email: "2022005@dinamica.com", password: "2022005" },
-    { name: "Ana Clara", email: "2022006@dinamica.com", password: "2022006" },
-    { name: "Alice", email: "2022007@dinamica.com", password: "2022007" },
-    { name: "Gael", email: "2022008@dinamica.com", password: "2022008" },
+    {
+      name: "Miguel",
+      email: "2022001@dinamica.com",
+      password: "2022001",
+      initialClass: classesRepository.get("4A")!.id,
+    },
+    {
+      name: "Heitor",
+      email: "2022002@dinamica.com",
+      password: "2022002",
+      initialClass: classesRepository.get("4A")!.id,
+    },
+    {
+      name: "Helena",
+      email: "2022003@dinamica.com",
+      password: "2022003",
+      initialClass: classesRepository.get("4A")!.id,
+    },
+    {
+      name: "Theo",
+      email: "2022004@dinamica.com",
+      password: "2022004",
+      initialClass: classesRepository.get("4A")!.id,
+    },
+    {
+      name: "Laura",
+      email: "2022005@dinamica.com",
+      password: "2022005",
+      initialClass: classesRepository.get("5A")!.id,
+    },
+    {
+      name: "Ana Clara",
+      email: "2022006@dinamica.com",
+      password: "2022006",
+      initialClass: classesRepository.get("5A")!.id,
+    },
+    {
+      name: "Alice",
+      email: "2022007@dinamica.com",
+      password: "2022007",
+      initialClass: classesRepository.get("5A")!.id,
+    },
+    {
+      name: "Gael",
+      email: "2022008@dinamica.com",
+      password: "2022008",
+      initialClass: classesRepository.get("5A")!.id,
+    },
   ];
 
   for (const student of studentsData) {
@@ -83,7 +138,7 @@ async function main() {
         name: student.name,
         password: student.password,
         role: "STUDENT",
-        students: { create: {} },
+        students: { create: { classId: student.initialClass } },
       },
     });
 
@@ -106,21 +161,6 @@ async function main() {
   }
 
   /**
-   * CLASSES
-   */
-  const classesData = ["4A", "5A"];
-
-  for (const className of classesData) {
-    const classEntity = await db.class.upsert({
-      where: { name: className },
-      update: {},
-      create: { name: className },
-    });
-
-    classesRepository.set(classEntity.name, classEntity);
-  }
-
-  /**
    * CONNECTIONS
    */
 
@@ -133,53 +173,6 @@ async function main() {
           connect: [...subjectsRepository.values()].map((s) => ({
             id: s.id,
           })),
-        },
-      },
-    });
-  }
-
-  // STUDENTS - CLASSES
-  const studentsClassesData = [
-    {
-      student: studentsRepository.get("Miguel"),
-      class: classesRepository.get("4A"),
-    },
-    {
-      student: studentsRepository.get("Heitor"),
-      class: classesRepository.get("4A"),
-    },
-    {
-      student: studentsRepository.get("Helena"),
-      class: classesRepository.get("4A"),
-    },
-    {
-      student: studentsRepository.get("Theo"),
-      class: classesRepository.get("4A"),
-    },
-    {
-      student: studentsRepository.get("Laura"),
-      class: classesRepository.get("5A"),
-    },
-    {
-      student: studentsRepository.get("Ana Clara"),
-      class: classesRepository.get("5A"),
-    },
-    {
-      student: studentsRepository.get("Alice"),
-      class: classesRepository.get("5A"),
-    },
-    {
-      student: studentsRepository.get("Gael"),
-      class: classesRepository.get("5A"),
-    },
-  ];
-
-  for (const studentClass of studentsClassesData) {
-    await db.student.update({
-      where: { userId: studentClass.student!.id },
-      data: {
-        classes: {
-          connect: { id: studentClass.class!.id },
         },
       },
     });

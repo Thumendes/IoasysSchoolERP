@@ -7,7 +7,7 @@ export async function createRouters(app: Application) {
 
   for (const file of files) {
     const name = file.split("/").pop();
-    console.log(chalk`[{blue router}]: {gray.bold ${name}}`);
+    console.log(chalk`[{yellow router}]: {gray.bold ${name}}`);
     (await import(file)).default(app, Router());
   }
 }

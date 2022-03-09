@@ -3,7 +3,11 @@ import { db } from "prisma/client";
 
 export class TeacherRepository {
   async findAll() {
-    return await db.teacher.findMany();
+    return await db.teacher.findMany({
+      include: {
+        user: { select: { email: true, role: true, name: true, id: true } },
+      },
+    });
   }
 
   async findById(id: string) {
@@ -20,5 +24,15 @@ export class TeacherRepository {
 
   async delete(id: string) {
     return await db.teacher.delete({ where: { id } });
+  }
+
+  async subjectsOf(id: string) {
+    return await db.teacher.findFirst({
+      where: { id },
+      include: {
+        user: { select: { email: true, role: true, name: true, id: true } },
+        subjects: { select: { name: true, id: true } },
+      },
+    });
   }
 }

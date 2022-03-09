@@ -3,6 +3,21 @@ import { db } from "prisma/client";
 import { HttpError } from "types/HttpError";
 
 export class ClassRepository {
+  async addStudent(classId: string, studentId: string) {
+    const user = await db.student.findFirst({ where: { userId: studentId } });
+
+    if (!user) {
+      throw new HttpError(404, "Student not found");
+    }
+
+    return await db.class.update({
+      where: { id: classId },
+      data: {
+        students: { connect: { id: studentId } },
+      },
+    });
+  }
+
   async addTeacher(classId: string, teacherId: string) {
     const user = await db.teacher.findFirst({ where: { userId: teacherId } });
 
@@ -38,7 +53,7 @@ export class ClassRepository {
     return await db.class.delete({ where: { id } });
   }
 
-  async studentsOf(id: any) {
+  async studentsOf(id: string) {
     const data = await db.class.findFirst({
       where: { id },
       select: {
@@ -51,5 +66,21 @@ export class ClassRepository {
     });
 
     return data?.students;
+  }
+
+  async subjectsOf(id: string) {
+    const data = await db.class.findFirst({
+      where: { id },
+      select: {
+        subjects: {
+          select: {
+            name: true,
+            id: true,
+          },
+        },
+      },
+    });
+
+    return data?.subjects;
   }
 }

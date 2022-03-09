@@ -7,7 +7,7 @@ export async function createMiddlewares(app: Application) {
 
   for (const file of files) {
     const name = file.split("/").pop();
-    console.log(chalk`[{blue middleware}]: {gray.bold ${name}}`);
+    console.log(chalk`[{yellow middleware}]: {gray.bold ${name}}`);
     app.use((await import(file)).default);
   }
 }

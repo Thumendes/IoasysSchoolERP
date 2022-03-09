@@ -1,5 +1,7 @@
+import { makeClassRepository } from "modules/Class/factory/makeRepository";
 import { StudentRepository } from "../student.repository";
 
 export function makeStudentRepository() {
-  return new StudentRepository();
+  const classRepository = makeClassRepository();
+  return new StudentRepository(classRepository);
 }

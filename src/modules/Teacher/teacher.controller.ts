@@ -24,4 +24,8 @@ export class TeacherController {
   async delete({ params: { id } }: HttpPayload) {
     return await this.TeacherRepository.delete(id);
   }
+
+  async findTeacherSubjects({ params: { id } }: HttpPayload) {
+    return await this.TeacherRepository.subjectsOf(id);
+  }
 }

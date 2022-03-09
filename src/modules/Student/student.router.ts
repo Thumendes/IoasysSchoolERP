@@ -7,6 +7,12 @@ export default async function StudentRouter(app: Application, router: Router) {
   const controller = makeStudentController();
   const adaptRoute = createRouteAdapter(controller);
 
+  router.get(
+    "/:id/grades",
+    access("read-grade"),
+    adaptRoute(controller.findStudentGrade)
+  );
+
   router.get("/", access("read-student"), adaptRoute(controller.findAll));
   router.get("/:id", access("read-student"), adaptRoute(controller.findById));
   router.post("/", access("create-student"), adaptRoute(controller.create));

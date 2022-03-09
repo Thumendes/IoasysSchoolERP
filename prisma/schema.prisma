@@ -30,8 +30,9 @@ model Teacher {
 model Student {
   id      String  @id @default(uuid())
   userId  String  @unique
+  classId String?
   user    User    @relation(fields: [userId], references: [id])
-  classes Class[]
+  class   Class?  @relation(fields: [classId], references: [id])
   grades  Grade[]
 }
 

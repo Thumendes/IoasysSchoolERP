@@ -28,6 +28,8 @@ export const AclConfig: AclConfigType = {
         AclModules.Subject,
         AclModules.Teacher,
         AclModules.User,
+        AclModules.Exam,
+        AclModules.Grade,
       ],
     },
 

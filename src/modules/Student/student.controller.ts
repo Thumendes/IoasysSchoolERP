@@ -5,6 +5,10 @@ import { StudentRepository } from "./student.repository";
 export class StudentController {
   constructor(private readonly StudentRepository: StudentRepository) {}
 
+  async findStudentGrade({ params: { id } }: HttpPayload) {
+    return await this.StudentRepository.findStudentGrade(id);
+  }
+
   async findAll({}: HttpPayload) {
     return await this.StudentRepository.findAll();
   }

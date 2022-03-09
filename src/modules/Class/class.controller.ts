@@ -2,10 +2,13 @@ import { Class } from "@prisma/client";
 import { HttpPayload } from "types/HttpPayload";
 import { ClassRepository } from "./class.repository";
 
-interface AddTeacherParams {
-  teacherId: string;
-  classId: string;
-}
+type TecherParams = { teacherId: string; classId: string };
+type StudentParams = { studentId: string; classId: string };
+
+type AddUserParams<T extends "teacherId" | "studentId"> = Record<
+  T extends "teacherId" ? keyof TecherParams : keyof StudentParams,
+  string
+>;
 
 export class ClassController {
   constructor(private readonly ClassRepository: ClassRepository) {}
@@ -32,8 +35,14 @@ export class ClassController {
 
   async addTeacher({
     params: { teacherId, classId },
-  }: HttpPayload<any, AddTeacherParams>) {
+  }: HttpPayload<any, AddUserParams<"teacherId">>) {
     return await this.ClassRepository.addTeacher(classId, teacherId);
+  }
+
+  async addStudent({
+    params: { studentId, classId },
+  }: HttpPayload<any, AddUserParams<"studentId">>) {
+    return await this.ClassRepository.addStudent(classId, studentId);
   }
 
   async classStudents({ params: { id } }: HttpPayload) {
