@@ -58,7 +58,7 @@ npm install; # yarn install
 ```
 
 ```bash
-# Migration MySQL
+# Migration MySQL + Seed
 npx prisma migrate deploy; # yarn prisma migrate deploy
 ```
 
@@ -66,3 +66,40 @@ npx prisma migrate deploy; # yarn prisma migrate deploy
 # Start Server
 npm start; # yarn start
 ```
+
+# Testes
+
+## Jest
+
+Para testar a base do funcionamento, criei alguns testes com Jest.
+Neles eu testo se a aplicação está funcionando corretamente, se o login está funcionando, e uma rota protegida.
+
+```bash
+npm run test; # yarn test
+```
+
+## Insomnia
+
+Parar um teste mais completo, com as principais rotas da API, é possível utilizar o Insomnia.
+O arquivo para importação é `insomnia.json`.
+
+Nas variáveis de ambiente, você deve informar alguns tokens de autenticação:
+
+- `Token` (Token de administrador)
+- `TokenAsStudent` (Token de aluno)
+- `TokenAsTeacher` (Token de professor)
+
+Para isso, você deve fazer login com cada usuário e pegar o token na resposta.
+Vou passar alguns usuários de exemplo, mas no arquivo `./prisma/seed.ts` tem mais opções de usuários cadastrados:
+
+- `Token` -> arthur@dinamica.com (Senha: 'admin123')
+- `TokenAsTeacher` -> luciane@dinamica.com (Senha: 'luciane')
+- `TokenAsStudent` -> 2022001@dinamica.com (Senha: '2022001')
+
+Para buscar o token:
+
+1. Na rota `authenticate`, preencher o campo `email` com o email do usuário e o campo `password` com a senha dele.
+2. Na resposta, copiar o `token` e colar na variável em questão.
+
+Para testar rotas que estão protegidas, basta adicionar o header `Authorization` com a variavel de token desejado.
+As regras de permissão estão no arquivo `./src/config/AclConfig.ts`.
